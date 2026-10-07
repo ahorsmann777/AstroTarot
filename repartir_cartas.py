@@ -4,7 +4,7 @@
 # aleatoriamente en los 36 decanatos de la rueda zodiacal.#
 # Autor: Alejandro Horsmann                               #
 # 22/09/2026                                              #
-# GPL Licence                                             #
+# MIT Licence                                             #
 #---------------------------------------------------------#
 import math
 import os
