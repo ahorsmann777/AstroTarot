@@ -1,0 +1,23 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.so
+
+# --- Copias de seguridad ---
+*.bak
+*~
+
+# --- Capturas / temporales ---
+Captura.jpg
+
+# --- Entornos virtuales ---
+.venv/
+venv/
+env/
+
+# --- Sesiones / archivos de trabajo de OpenCode ---
+opencode -s *
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
