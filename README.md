@@ -50,7 +50,7 @@ pip install -r requirements.txt
 ## Instalación
 
 ```bash
-git clone https://github.com/TU_USUARIO/astrotarot.git
+git clone https://github.com/ahorsmann777/AstroTarot.git
 cd astrotarot
 pip install -r requirements.txt
 ```
