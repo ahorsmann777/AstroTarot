@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
-#---------------------------------------------------------#
-# Este script reparte 36 de las 78 cartas del Tarot       #
-# aleatoriamente en los 36 decanatos de la rueda zodiacal.#
-# Autor: Alejandro Horsmann                               #
-# 22/09/2026                                              #
-# MIT Licence                                             #
-#---------------------------------------------------------#
+"""Rueda de 12 secciones de 30 grados con una carta de tarot aleatoria en cada una.
+
+Autor: Alejandro Horsmann
+MIT Licence
+"""
+
 import math
 import os
 import random
+import subprocess
 import sys
 
 import tkinter as tk
 from PIL import Image, ImageDraw, ImageTk
 
-
-#<=== Ubicación de la carpeta "Cartas" ===>#
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 CANDIDATOS = (
@@ -26,10 +24,23 @@ CANDIDATOS = (
 )
 
 OFFSETS_UI = {
-    "margen": 30,          # margen exterior mínimo de la ventana
-    "barra": 100,          # alto reservado para botón + contador
-    "rejilla_interior": 0.055,   # radio del círculo central (fracción del lienzo)
+    "margen": 30,
+    "barra": 100,
+    "rejilla_interior": 0.055,
 }
+
+COLORES = {
+    "fondo": "#f5f0e6",
+    "punteo": "#b08968",
+    "seccion": "#7a4a2b",
+    "circulo": "#4a3020",
+}
+
+PASO_SECCION = 30
+TAMANO_CARTAS = 12
+ANG0 = 180.0
+
+SIMBOLOS_ZODIACO = ("♓", "♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒")
 
 
 def localizar_cartas():
@@ -41,7 +52,6 @@ def localizar_cartas():
 
 
 def tamano_ventana(raiz):
-    """Lienzo cuadrado que cabe en la pantalla dejando márgenes y la barra."""
     ancho = raiz.winfo_screenwidth()
     alto = raiz.winfo_screenheight()
     disponible = min(
@@ -50,13 +60,19 @@ def tamano_ventana(raiz):
     )
     return max(500, int(disponible))
 
-#<=== Dibuja rueda ===>#
+
+def volver_al_menu(root):
+    ruta = os.path.join(BASE, "menu_inicio.py")
+    if os.path.isfile(ruta):
+        subprocess.Popen([sys.executable, ruta], cwd=BASE)
+    root.destroy()
+
+
 def construir_geometria(lienzo):
-    """Devuelve las medidas de la rueda a escala del lienzo."""
     f = lienzo / 1000.0
     centro = lienzo // 2
     r_circulo = int(455 * f)
-    l_carta = int(100 * f)
+    l_carta = int(180 * f)
     r_carta_ext = int(430 * f)
     r_carta_int = r_carta_ext - l_carta
     r_medio = (r_carta_ext + r_carta_int) / 2.0
@@ -71,25 +87,8 @@ def construir_geometria(lienzo):
         "r_carta_int": r_carta_int,
         "l_carta": l_carta,
         "r_medio": r_medio,
-        "grueso_desde": int(30 * f),
-        "fino_desde": int(55 * f),
         "centro_radio": int(OFFSETS_UI["rejilla_interior"] * lienzo),
     }
-
-
-COLORES = {
-    "fondo": "#f5f0e6",
-    "punteo": "#b08968",
-    "seccion": "#7a4a2b",
-    "circulo": "#4a3020",
-}
-
-PASO_GRUESO = 30            # cada cuántos grados va una división gruesa
-PASO_FINO = 10              # divisiones finas / punteadas
-TAMANO_CARTAS = 36          # cartas que se reparten (una por porción de 10°)
-ANG0 = 180.0                # sección 0° en las 9 en punto; antihorario
-
-SIMBOLOS_ZODIACO = ("♓", "♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒")  # una casa adelantada
 
 
 def punto(g, ang, radio):
@@ -98,10 +97,10 @@ def punto(g, ang, radio):
             g["oy"] + g["centro"] + radio * math.sin(a))
 
 
-class RuedaApp:
+class RuedaDoceApp:
     def __init__(self, root, carpeta_cartas):
         self.root = root
-        root.title("AstroTarot — Rueda de 36 cartas")
+        root.title("AstroTarot — Rueda de 12 cartas")
         root.configure(bg=COLORES["fondo"])
         root.resizable(True, True)
         root.minsize(500, 500)
@@ -119,7 +118,6 @@ class RuedaApp:
             print("La carpeta 'Cartas' no contiene imágenes JPG.", file=sys.stderr)
             sys.exit(1)
 
-        # Cartas base ya redimensionadas (evita re-abrir los JPG).
         self.base = {path: self._cargar(path) for path in self.cartas}
         self.fotos = []
         self.reparto = 0
@@ -156,6 +154,22 @@ class RuedaApp:
         )
         self.boton.pack(side="left", padx=20)
 
+        self.boton_salir = tk.Button(
+            fila,
+            text="Salir",
+            font=("Helvetica", 14, "bold"),
+            bg=COLORES["circulo"],
+            fg="white",
+            activebackground=COLORES["seccion"],
+            activeforeground="white",
+            padx=20,
+            pady=6,
+            relief="flat",
+            cursor="hand2",
+            command=lambda: volver_al_menu(self.root),
+        )
+        self.boton_salir.pack(side="left", padx=(0, 20))
+
         self.repartir()
 
     def _cargar(self, path):
@@ -166,12 +180,10 @@ class RuedaApp:
         return im.resize((ancho_nuevo, alto_nuevo), Image.LANCZOS)
 
     def preparar(self, base, ang):
-        """Recorta la carta en forma de elipse y la rota hacia afuera.
-
-        La elipse evita las esquinas rectangulares, por lo que al rotar no
-        queda ningún trozo relleno (blanco) alrededor de la carta.
-        """
-        max_ancho = max(20, int(math.radians(PASO_FINO) * self.geo["r_medio"] * 0.94))
+        max_ancho = max(
+            20,
+            int(math.radians(PASO_SECCION) * self.geo["r_carta_int"] * 0.88),
+        )
         im = base
         if im.width > max_ancho:
             factor = max_ancho / im.width
@@ -183,7 +195,7 @@ class RuedaApp:
 
         ang_pil = (-90.0 - ang) % 360.0
         im = im.rotate(ang_pil, expand=True, resample=Image.BICUBIC,
-                      fillcolor=COLORES["fondo"])
+                       fillcolor=COLORES["fondo"])
         mascara = mascara.rotate(ang_pil, expand=True, resample=Image.BICUBIC)
         im.putalpha(mascara)
         return ImageTk.PhotoImage(im)
@@ -201,22 +213,14 @@ class RuedaApp:
             cx + g["r_circulo"], cy + g["r_circulo"],
             outline=COLORES["circulo"], width=4,
         )
-        for paso in range(0, 37):
-            ang = ANG0 + PASO_FINO * paso
-            if paso % 3 == 0:
-                p0 = punto(g, ang, g["grueso_desde"])
-                p1 = punto(g, ang, g["r_circulo"] - 2)
-                self.canvas.create_line(
-                    p0[0], p0[1], p1[0], p1[1],
-                    fill=COLORES["seccion"], width=3,
-                )
-            else:
-                p0 = punto(g, ang, g["fino_desde"])
-                p1 = punto(g, ang, g["r_circulo"] - 8)
-                self.canvas.create_line(
-                    p0[0], p0[1], p1[0], p1[1],
-                    fill=COLORES["punteo"], width=1, dash=(3, 6),
-                )
+        for paso in range(TAMANO_CARTAS):
+            ang = ANG0 + PASO_SECCION * paso
+            p0 = punto(g, ang, g["centro_radio"])
+            p1 = punto(g, ang, g["r_circulo"] - 2)
+            self.canvas.create_line(
+                p0[0], p0[1], p1[0], p1[1],
+                fill=COLORES["seccion"], width=3,
+            )
         self.canvas.create_oval(
             cx - g["centro_radio"], cy - g["centro_radio"],
             cx + g["centro_radio"], cy + g["centro_radio"],
@@ -225,12 +229,10 @@ class RuedaApp:
         self.dibujar_zodiaco()
 
     def dibujar_zodiaco(self):
-        """Dibuja los 12 símbolos zodiacales fuera del anillo, en el medio de
-        cada sección de 30°, comenzando en las 9 en punto y en sentido antihorario."""
         g = self.geo
         tam = max(10, int(20 * (g["lienzo"] / 1000.0)))
         for i, simb in enumerate(SIMBOLOS_ZODIACO):
-            ang = ANG0 + PASO_GRUESO / 2.0 - PASO_GRUESO * i
+            ang = ANG0 + PASO_SECCION / 2.0 - PASO_SECCION * i
             x, y = punto(g, ang, g["r_zodiaco"])
             self.canvas.create_text(
                 x, y, text=simb, font=("DejaVu Sans", tam, "bold"),
@@ -244,14 +246,13 @@ class RuedaApp:
         self.redibujar()
 
     def redibujar(self):
-        """Redibuja la rueda completa conservando el reparto actual."""
         if not self.elegidas:
             return
         self.reiniciar_lienzo()
         self.dibujar_marco()
 
         for indice, path in enumerate(self.elegidas):
-            ang = ANG0 + PASO_FINO * indice + PASO_FINO / 2.0
+            ang = ANG0 + PASO_SECCION * (indice + 0.5)
             foto = self.preparar(self.base[path], ang)
             self.fotos.append(foto)
             x, y = punto(self.geo, ang, self.geo["r_medio"])
@@ -291,7 +292,7 @@ class RuedaApp:
 def main():
     carpeta = localizar_cartas()
     root = tk.Tk()
-    RuedaApp(root, carpeta)
+    RuedaDoceApp(root, carpeta)
     root.mainloop()
 
 
