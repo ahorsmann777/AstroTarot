@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 import tkinter as tk
-from PIL import Image, ImageDraw, ImageTk
+from PIL import Image, ImageTk
 
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -184,20 +184,16 @@ class RuedaDoceApp:
             20,
             int(math.radians(PASO_SECCION) * self.geo["r_carta_int"] * 0.88),
         )
-        im = base
+        im = base.convert("RGBA")
         if im.width > max_ancho:
             factor = max_ancho / im.width
             im = im.resize((max_ancho, max(1, int(im.height * factor))), Image.LANCZOS)
 
-        ancho, alto = im.size
-        mascara = Image.new("L", (ancho, alto), 0)
-        ImageDraw.Draw(mascara).ellipse([0, 0, ancho - 1, alto - 1], fill=255)
-
         ang_pil = (-90.0 - ang) % 360.0
-        im = im.rotate(ang_pil, expand=True, resample=Image.BICUBIC,
-                       fillcolor=COLORES["fondo"])
-        mascara = mascara.rotate(ang_pil, expand=True, resample=Image.BICUBIC)
-        im.putalpha(mascara)
+        im = im.rotate(
+            ang_pil, expand=True, resample=Image.BICUBIC,
+            fillcolor=(0, 0, 0, 0),
+        )
         return ImageTk.PhotoImage(im)
 
     def reiniciar_lienzo(self):

@@ -47,7 +47,8 @@ finas las porciones de 10°.
 `repartir_12_signos.py` dibuja una rueda dividida en **12 secciones de 30°** y
 reparte **una carta aleatoria en cada sección**, sin repetición, tomándola de
 las 78 cartas disponibles. Las cartas se colocan en el centro de cada sección,
-con su parte superior hacia el exterior de la rueda.
+con su parte superior hacia el exterior de la rueda y conservan sus bordes
+rectangulares.
 
 <p align="center">
   <img src="docs/rueda_12_signos.png" alt="Rueda de 12 cartas con signos zodiacales" width="520">
@@ -57,7 +58,8 @@ con su parte superior hacia el exterior de la rueda.
 
 `repartir_12_casas.py` es una variante de la rueda de 12
 cartas que sustituye los símbolos zodiacales por los **números romanos del I al
-XII**, manteniendo una carta aleatoria por sección.
+XII**, manteniendo una carta aleatoria por sección y los bordes rectangulares
+de las cartas.
 
 <p align="center">
   <img src="docs/rueda_12_casas.png" alt="Rueda de 12 cartas con números romanos" width="520">
@@ -86,8 +88,9 @@ el superior izquierdo y el **Sol** en el centro.
 - Cuatro modalidades: 36 cartas en porciones de 10°, 12 cartas con símbolos
   zodiacales, 12 cartas con números romanos o 7 cartas sobre un hexagrama
   unicursal.
-- Cartas rotadas con `Pillow`; en las ruedas se recortan en forma de elipse y
-  en el hexagrama conservan sus bordes rectangulares.
+- Cartas rotadas con `Pillow`; solo la rueda de 36 usa recorte elíptico, mientras
+  que las ruedas de 12 y el hexagrama conservan bordes rectangulares con
+  esquinas transparentes.
 - La ventana se **ajusta automáticamente a la resolución de la pantalla**;
   todos los elementos de la rueda se escalan de forma proporcional.
 - Contador de repartos y total de cartas usado.
@@ -179,10 +182,11 @@ astrotarot/
   sus 6 vértices. Las 6 cartas exteriores se colocan en esos vértices y la
   séptima en el centro. Encima de cada carta se dibuja su símbolo planetario.
 - **Reparto:** `random.sample` elige 36 cartas de las 78 (o 12, o 7 según la
-  figura); cada carta se redimensiona con Pillow. En las ruedas se recorta en
-  forma de elipse y se rota según la inclinación de su porción o sección; en el
-  hexagrama se mantienen los bordes rectangulares con las esquinas
-  transparentes y todas las cartas quedan derechas.
+  figura); cada carta se redimensiona con Pillow. En la rueda de 36 se recorta
+  en forma de elipse y se rota según la inclinación de su porción; en las ruedas
+  de 12 se rota cada carta manteniendo sus bordes rectangulares con esquinas
+  transparentes. En el hexagrama las cartas también conservan sus bordes
+  rectangulares y quedan todas derechas.
 - **Ajuste a pantalla:** el tamaño del lienzo se calcula a partir de
   `winfo_screenwidth/height` dejando márgenes para la barra de botones; las
   dimensiones de la rueda o figura y el tamaño de las cartas se escalan
