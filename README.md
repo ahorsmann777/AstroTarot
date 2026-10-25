@@ -1,4 +1,4 @@
-# AstroTarot — Ruedas y figuras de tarot
+# AstroTarot — Operaciones astrológicas del tarot
 
 Aplicaciones en **Python 3** con **Tkinter** que reparten cartas de tarot sobre
 ruedas circulares divididas en secciones astrológicas y sobre un hexagrama
@@ -53,7 +53,7 @@ con su parte superior hacia el exterior de la rueda.
   <img src="docs/rueda_12_signos.png" alt="Rueda de 12 cartas con signos zodiacales" width="520">
 </p>
 
-## Rueda de 12 cartas numeradas
+## Rueda de 12 casas
 
 `repartir_12_casas.py` es una variante de la rueda de 12
 cartas que sustituye los símbolos zodiacales por los **números romanos del I al
