@@ -1,14 +1,13 @@
 # AstroTarot — Operaciones astrológicas del tarot
 
-Aplicaciones en **Python 3** con **Tkinter** que reparten cartas de tarot sobre
-ruedas circulares divididas en secciones astrológicas y sobre un hexagrama
-unicursal.
+Aplicaciones en **Python 3** con **Tkinter** que reparten cartas del Tarot en base a 
+distintas operaciones basadas en las correspondencias atrológicas.
 
 ## Menú de inicio
 
-`menu_inicio.py` abre una ventana gráfica con los cuatro repartos disponibles.
+`menu_inicio.py` abre una ventana gráfica con las cuatro operaciones disponibles.
 Al elegir una opción, el programa se inicia en una ventana independiente. El
-botón **Salir** de cada programa cierra su ventana y vuelve a abrir el menú de
+botón **Salir** de cada programa cierra su ventana y vuelve al menú de
 inicio.
 
 ```bash
@@ -21,22 +20,18 @@ python3 menu_inicio.py
 
 ## Rueda de 36 cartas
 
-`repartir_36_decanatos.py` dibuja un círculo dividido en **12 secciones de 30°**, cada
-una subdividida en **3 porciones de 10°** (36 porciones en total). Al pulsar el
-botón **Repartir** se seleccionan **36 cartas de las 78** disponibles, sin
-repetición, y se coloca una imagen en cada porción de 10°:
+`repartir_36_decanatos.py` crea una ruda zodiacal dividida en **12 secciones de 30°**, 
+cada seccion se subdividen en **3 porciones de 10°** (36 decanatos en total, 3 por cada signo). 
+Al pulsar el botón **Repartir** se seleccionan **36 cartas de las 78** sin
+repetición, y se reparten 3 cartas por cada signo:
 
 - 3 cartas por cada sección de 30°.
-- Una imagen por cada porción de 10°.
+- Una carta por cada decanato.
 - La sección 0° comienza a las **9 en punto** y avanza en **sentido
   antihorario** (de izquierda a derecha por arriba).
-- Las cartas se muestran con su parte superior apuntando hacia el exterior de
-  la rueda.
-- El orden de las secciones es fijo; lo que cambia en cada reparto son las
-  cartas.
 
 Las divisiones gruesas marcan las secciones de 30° y las líneas punteadas
-finas las porciones de 10°.
+finas los decanatos.
 
 <p align="center">
   <img src="docs/rueda_36_decanatos.png" alt="Rueda de 36 cartas" width="520">
@@ -44,11 +39,9 @@ finas las porciones de 10°.
 
 ## Rueda de 12 cartas
 
-`repartir_12_signos.py` dibuja una rueda dividida en **12 secciones de 30°** y
-reparte **una carta aleatoria en cada sección**, sin repetición, tomándola de
-las 78 cartas disponibles. Las cartas se colocan en el centro de cada sección,
-con su parte superior hacia el exterior de la rueda y conservan sus bordes
-rectangulares.
+`repartir_12_signos.py` también crea una rueda dividida en **12 secciones de 30°** pero
+reparte **una carta aleatoria en cada sección**, también sin repetición. Las cartas se 
+colocan en el centro de cada sección.
 
 <p align="center">
   <img src="docs/rueda_12_signos.png" alt="Rueda de 12 cartas con signos zodiacales" width="520">
@@ -57,9 +50,8 @@ rectangulares.
 ## Rueda de 12 casas
 
 `repartir_12_casas.py` es una variante de la rueda de 12
-cartas que sustituye los símbolos zodiacales por los **números romanos del I al
-XII**, manteniendo una carta aleatoria por sección y los bordes rectangulares
-de las cartas.
+cartas que sustituye los símbolos zodiacales por los **números de las casas de la I a la
+XII**, repartiendo una carta aleatoria por sección.
 
 <p align="center">
   <img src="docs/rueda_12_casas.png" alt="Rueda de 12 cartas con números romanos" width="520">
@@ -67,10 +59,10 @@ de las cartas.
 
 ## Hexagrama unicursal de 7 cartas
 
-`repartir_7_hexagrama.py` dibuja un **hexagrama unicursal** de una sola línea y
-reparte **7 cartas aleatorias sin repetición**: una en cada uno de los **6
-vértices externos** y una en el **centro**. Todas las cartas se muestran
-derechas, con su base hacia abajo, y conservan sus bordes rectangulares.
+`repartir_7_hexagrama.py` dibuja un **hexagrama unicursal** y reparte 
+**7 cartas aleatorias sin repetición**: una en cada uno de los **6
+vértices externos**  representando a los 6 planetas y una en el **centro**
+representando al sol.
 
 Sobre cada carta se dibuja un símbolo planetario: **Saturno** en el ápice
 superior, **Júpiter** en el superior derecho, **Venus** en el inferior derecho,
